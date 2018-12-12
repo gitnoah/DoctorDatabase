@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class DoctorGUI {
 	Object[] columns;
 	DefaultTableModel model;
+	Object[] row;
 	
 	public DoctorGUI() {
 		JFrame frame = new JFrame();
@@ -92,31 +93,42 @@ public class DoctorGUI {
 		GridBagConstraints c2 = new GridBagConstraints();
 		
 		/////////////////////
-		Object[] columns = {"Name","Phone number"};
-		model = new DefaultTableModel();
-		model.setColumnIdentifiers(columns);
+		//Object[] columns = {"Name","Phone"};
+		//model = new DefaultTableModel();
+		//model.setColumnIdentifiers(columns);
+		//model.addRow(new Object[] {"Column 1", "Column 2"});
+		//table2.setModel(model);
 		
-		table2.setModel(model);
-		
-		table2.setRowHeight(30);
+		//table2.setRowHeight(30);
 		
 		JScrollPane pane1 = new JScrollPane(table2);
-		pane1.setLayout(null);
-		frame.add(pane1);
-		pane1.setVisible(false);
+		//pane1.setVisible(false);
+		c2.gridx = 0;
+		c2.gridy = 2;
+		pane1.setSize(600, 600);
+		
+		panel2.add(pane1, c2);
+		frame2.setLayout(null);
 		////////////////////
 		
 		JButton display = new JButton("Display Patients.");
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		panel2.add(display, c);
+		panel2.add(display, c2);
 		
 		display.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				pane1.setVisible(true);
+				//pane1.setVisible(true);
+				Object[] columns = {"Name","Phone"};
+				model = new DefaultTableModel();
+				model.setColumnIdentifiers(columns);
+				table2.setModel(model);
+				table2.setRowHeight(30);
+				
+				refresh();
 				
 			}
 			
@@ -171,6 +183,7 @@ public class DoctorGUI {
 		});
 		
 		frame2.add(panel2);
+		frame2.setContentPane(panel2);
 		
 		//////////////////////New Frame End///////////////////////////////
 		
@@ -192,7 +205,6 @@ public class DoctorGUI {
 					
 					if(rs.getString("Password").equals(passt.getText())) {
 						frame.dispose();
-						frame2.setContentPane(panel2);
 						frame2.setVisible(true);
 					}else {
 						passwordcheck.setVisible(true);
@@ -207,11 +219,25 @@ public class DoctorGUI {
 		
 		//////////////////////////////Button Action Listener END////////////////////////////
 		
+		/////////////////////////////Select DoctorID start//////////////////////////
+		
+		
+		
+		/////////////////////////////Select DoctorID end//////////////////////////
+		
 		frame.add(panel);
 		frame.setVisible(true);
 		
 	
 		
+	}
+	
+	private static void getDoctorID() {
+		String sql = "SELECT DoctorID FROM DoctorTable WHERE Username = ?";
+		
+		try {
+			
+		}
 	}
 	
 	private Connection connect() {
@@ -226,5 +252,32 @@ public class DoctorGUI {
 		}
 		return conn;
 	}
+	
+	public void refresh() {
+		row = new Object[3];
+		model.setRowCount(0);
+		String sql = "SELECT Name, Phone number FROM Patient Table WHERE DoctorID = ?";
+		
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, arg1);
+			ResultSet rs = pstmt.executeQuery(sql);
+			
+			while (rs.next()) {
+				row[0] = rs.getString("Name");
+				row[1] = rs.getString("Phone number");
+				
+				model.addRow(row);
+			}
+			
+			rs.close();
+			stmt.close();
+			conn.close();
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 
 }
