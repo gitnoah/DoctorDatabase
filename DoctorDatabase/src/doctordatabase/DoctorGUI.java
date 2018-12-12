@@ -236,7 +236,9 @@ public class DoctorGUI {
 		String sql = "SELECT DoctorID FROM DoctorTable WHERE Username = ?";
 		
 		try {
-			
+			Connection conn = connect();
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -272,7 +274,7 @@ public class DoctorGUI {
 			}
 			
 			rs.close();
-			stmt.close();
+			pstmt.close();
 			conn.close();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
