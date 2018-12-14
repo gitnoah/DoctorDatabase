@@ -163,6 +163,11 @@ public class DoctorGUI {
 				
 				try {
 					
+					Connection conn = connect();
+					PreparedStatement ps = conn.prepareStatement(sql);
+					
+				}catch(SQLException e) {
+					System.out.println(e.getMessage());
 				}
 				
 			}
