@@ -105,13 +105,76 @@ public class DoctorGUI {
 		JScrollPane pane1 = new JScrollPane(table2);
 		pane1.setVisible(false);
 		c2.gridx = 0;
-		c2.gridy = 2;
+		c2.gridy = 5;
 		c2.gridwidth = 4;
 		pane1.setSize(600, 600);
 		
 		panel2.add(pane1, c2);
 		frame2.setLayout(null);
 		////////////////////
+		
+		/////////////////////add patient options////////////////////////////
+		
+		JLabel pname = new JLabel("Enter name of Patient");
+		c.gridy = 1;
+		c.gridx = 0;
+		
+		pname.setVisible(false);
+		
+		panel2.add(pname, c);
+		
+		JLabel pnum = new JLabel("Enter phone number");
+		c.gridy = 2;
+		c.gridx = 0;
+		
+		pnum.setVisible(false);
+		
+		panel2.add(pnum, c);
+		
+		JTextField pnamt = new JTextField(30);
+		c.gridy = 1;
+		c.gridx = 1;
+		
+		pnamt.setVisible(false);
+		
+		panel2.add(pnamt, c);
+		
+		JTextField pphont = new JTextField(30);
+		c.gridy = 2;
+		c.gridx = 1;
+		
+		pphont.setVisible(false);
+		
+		panel2.add(pphont);
+		
+		JButton entpat = new JButton("Enter");
+		c.gridy = 3;
+		c.gridx = 0;
+		
+		entpat.setVisible(false);
+		
+		panel2.add(entpat);
+		
+		entpat.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String sql = "INSERT INTO PatientTable (Name, Phone number, DoctorID) VALUES (?, ?, ?)";
+				
+				try {
+					
+				}
+				
+			}
+			
+		});
+		
+		
+		
+		
+		
+		
+		//////////////////////////////
 		
 		JButton display = new JButton("Display Patients.");
 		c2.gridx = 0;
@@ -124,6 +187,7 @@ public class DoctorGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Display Patients Button");
 				pane1.setVisible(true);
 				Object[] columns = {"Name","Phone"};
 				model = new DefaultTableModel();
@@ -148,7 +212,16 @@ public class DoctorGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				System.out.println("New Patients");
+				pane1.setVisible(true);
+				Object[] columns = {"Name","Phone"};
+				model = new DefaultTableModel();
+				model.setColumnIdentifiers(columns);
+				table2.setModel(model);
+				table2.setRowHeight(30);
+				
+				refresh(DoctorID);
+				
 				
 			}
 			
@@ -202,10 +275,12 @@ public class DoctorGUI {
 				String sql = "SELECT Password FROM DoctorTable WHERE Username = ?";
 				
 				try {
+					System.out.println("Enter Button");
 					Connection conn = connect();
 					PreparedStatement pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, usert.getText());
 					ResultSet rs = pstmt.executeQuery();
+					DoctorID = getDoctorID(usert.getText());
 					
 					
 					
@@ -230,7 +305,7 @@ public class DoctorGUI {
 		//////////////////////////////Button Action Listener END////////////////////////////
 		
 		
-		DoctorID = getDoctorID(usert.getText());
+		
 		
 		frame.add(panel);
 		frame.setVisible(true);
@@ -240,17 +315,19 @@ public class DoctorGUI {
 	}
 	
 	private int getDoctorID(String usert) {
+		System.out.println("getDoctorID");
 		String sql = "SELECT DoctorID FROM DoctorTable WHERE Username = ?";
 		
-		int DoctorID = 0;
+		int Doctorid = 0;
 		
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, usert);
-			ResultSet rs = pstmt.executeQuery(sql);
+			ResultSet rs = pstmt.executeQuery();
 			
-			DoctorID = rs.getInt("DoctorID");
+			Doctorid = rs.getInt("DoctorID");
+			System.out.println("Doctor ID = " + Doctorid);
 			
 			rs.close();
 			pstmt.close();
@@ -260,7 +337,7 @@ public class DoctorGUI {
 			System.out.println(e.getMessage());
 		}
 		
-		return DoctorID;
+		return Doctorid;
 	}
 	
 	private Connection connect() {
@@ -277,20 +354,21 @@ public class DoctorGUI {
 	}
 //////Issue	
 	public void refresh(int DoctorID) {
+		System.out.println("Refresh method");
 		row = new Object[2];
 		model.setRowCount(0);
-		String sql = "SELECT Name, Phone number FROM Patient Table WHERE DoctorID = ?";
+		String sql = "SELECT Name, Phonenumber FROM PatientTable WHERE DoctorID = ?";
+		
 		
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, DoctorID);
-			System.out.println(DoctorID);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
 				row[0] = rs.getString("Name");
-				row[1] = rs.getString("Phone number");
+				row[1] = rs.getString("Phonenumber");
 				
 				model.addRow(row);
 			}
