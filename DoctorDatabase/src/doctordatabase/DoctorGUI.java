@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class DoctorGUI {
 	Object[] columns;
-	DefaultTableModel model;
+	DefaultTableModel model, model2;
 	Object[] row;
 	int DoctorID;
 
@@ -82,6 +82,7 @@ public class DoctorGUI {
 
 		JFrame frame2 = new JFrame();
 		JTable table2 = new JTable();
+		JTable table3 = new JTable();
 		frame2.setSize(1200, 1200);
 		frame2.setLocationRelativeTo(null);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -190,6 +191,24 @@ public class DoctorGUI {
 		///////////////////// add patient options end/////////
 
 		////////////////////// display visits start/////////////////
+		
+		Object[] columns2 = { "Date", "Diagnosis", "Medicine" };
+		model2 = new DefaultTableModel();
+		model2.setColumnIdentifiers(columns2);
+		model2.addRow(new Object[] { "Column 1", "Column 2", "Column 3" });
+		table3.setModel(model2);
+
+		table3.setRowHeight(30);
+
+		JScrollPane pane2 = new JScrollPane(table3);
+		pane2.setVisible(false);
+		c2.gridx = 0;
+		c2.gridy = 5;
+		c2.gridwidth = 4;
+		pane2.setSize(600, 600);
+
+		panel2.add(pane2, c2);
+		frame2.setLayout(null);
 
 		/////////////////////// display visits end///////////////////
 
@@ -212,11 +231,11 @@ public class DoctorGUI {
 				entpat.setVisible(false);
 
 				pane1.setVisible(true);
-				Object[] columns = { "Name", "Phone" };
+				Object[] columns = { "Date", "Diagnosis", "Medicine" };
 				model = new DefaultTableModel();
 				model.setColumnIdentifiers(columns);
-				table2.setModel(model);
-				table2.setRowHeight(30);
+				table3.setModel(model);
+				table3.setRowHeight(30);
 
 				refresh(DoctorID);
 
@@ -266,7 +285,22 @@ public class DoctorGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				System.out.println("Display Patients Button");
+				pname.setVisible(false);
+				pnum.setVisible(false);
+				pnamt.setVisible(false);
+				pphont.setVisible(false);
+				entpat.setVisible(false);
+				pane1.setVisible(false);
+				
+				Object[] columns = { "Name", "Phone" };
+				model2 = new DefaultTableModel();
+				model2.setColumnIdentifiers(columns);
+				table2.setModel(model);
+				table2.setRowHeight(30);
+
+				refresh(DoctorID);
+
 
 			}
 
