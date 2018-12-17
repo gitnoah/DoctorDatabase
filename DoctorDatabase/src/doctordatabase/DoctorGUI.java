@@ -26,7 +26,9 @@ public class DoctorGUI {
 	Object[] columns;
 	DefaultTableModel model, model2;
 	Object[] row;
+	Object[] row2;
 	int DoctorID;
+	int PatientID;
 
 	public DoctorGUI() {
 		JFrame frame = new JFrame();
@@ -199,16 +201,46 @@ public class DoctorGUI {
 		table3.setModel(model2);
 
 		table3.setRowHeight(30);
+		
+		JLabel vname = new JLabel("Enter name of patient.");
+		c2.gridx = 0;
+		c2.gridy = 1;
+		
+		panel2.add(vname, c2);
+		vname.setVisible(false);
+		
+		JTextField vnamet = new JTextField(20);
+		c2.gridx = 1;
+		c2.gridy = 1;
+		
+		panel2.add(vnamet, c2);
+		vnamet.setVisible(false);
 
 		JScrollPane pane2 = new JScrollPane(table3);
 		pane2.setVisible(false);
 		c2.gridx = 0;
-		c2.gridy = 5;
+		c2.gridy = 2;
 		c2.gridwidth = 4;
 		pane2.setSize(600, 600);
 
 		panel2.add(pane2, c2);
 		frame2.setLayout(null);
+		
+		JButton entervi = new JButton("Enter");
+		
+		entervi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				PatientID = getPatientID(vname.getText());
+				refresh2(PatientID);
+				
+				
+			}
+			
+		});
+		
+		
 
 		/////////////////////// display visits end///////////////////
 
@@ -231,11 +263,11 @@ public class DoctorGUI {
 				entpat.setVisible(false);
 
 				pane1.setVisible(true);
-				Object[] columns = { "Date", "Diagnosis", "Medicine" };
+				Object[] columns = { "Name", "Phone" };
 				model = new DefaultTableModel();
 				model.setColumnIdentifiers(columns);
-				table3.setModel(model);
-				table3.setRowHeight(30);
+				table2.setModel(model);
+				table2.setRowHeight(30);
 
 				refresh(DoctorID);
 
@@ -293,13 +325,14 @@ public class DoctorGUI {
 				entpat.setVisible(false);
 				pane1.setVisible(false);
 				
-				Object[] columns = { "Name", "Phone" };
+				pane2.setVisible(true);
+				Object[] columns = { "Date", "Diagnosis", "Medicine" };
 				model2 = new DefaultTableModel();
 				model2.setColumnIdentifiers(columns);
-				table2.setModel(model);
-				table2.setRowHeight(30);
+				table3.setModel(model);
+				table3.setRowHeight(30);
 
-				refresh(DoctorID);
+				
 
 
 			}
@@ -317,7 +350,7 @@ public class DoctorGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				
 
 			}
 
@@ -432,6 +465,59 @@ public class DoctorGUI {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public void refresh2(int PatientID) {
+		System.out.println("Refresh2 method");
+		row2 = new Object[3];
+		model2.setRowCount(0);
+		String sql = "SELECT Date, Diagnosis, Medicine FROM PatientVisit WHERE PatientID = ?";
+
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, PatientID);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				row2[0] = rs.getString("Date");
+				row2[1] = rs.getString("Diagnosis");
+				row2[3] = rs.getString("Medicine");
+
+				model2.addRow(row);
+			}
+
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private int getPatientID(String vname) {
+		System.out.println("getPatientID");
+		String sql = "SELECT PatientID FROM PatientTable WHERE Name = ?";
+
+		int Patientid = 0;
+
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vname);
+			ResultSet rs = pstmt.executeQuery();
+
+			Patientid = rs.getInt("PatientID");
+
+			rs.close();
+			pstmt.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return Patientid;
 	}
 
 }
