@@ -222,7 +222,7 @@ public class DoctorGUI {
 		JScrollPane pane2 = new JScrollPane(table3);
 		pane2.setVisible(false);
 		c2.gridx = 0;
-		c2.gridy = 3;
+		c2.gridy = 6;
 		c2.gridwidth = 4;
 		pane2.setSize(600, 600);
 
@@ -284,24 +284,24 @@ public class DoctorGUI {
 		panel2.add(entervisit, c2);
 		entervisit.setVisible(false);
 
-		JTextField enterdate = new JTextField();
-		c2.gridx = 1;
+		JTextField enterdate = new JTextField(20);
+		c2.gridx = 2;
 		c2.gridy = 2;
 		c2.gridwidth = 2;
 
 		panel2.add(enterdate, c2);
 		enterdate.setVisible(false);
 
-		JTextField enterdiagnosis = new JTextField();
-		c2.gridx = 1;
+		JTextField enterdiagnosis = new JTextField(20);
+		c2.gridx = 2;
 		c2.gridy = 3;
 		c2.gridwidth = 2;
 
 		panel2.add(enterdiagnosis, c2);
 		enterdiagnosis.setVisible(false);
 
-		JTextField entermedicine = new JTextField();
-		c2.gridx = 1;
+		JTextField entermedicine = new JTextField(20);
+		c2.gridx = 2;
 		c2.gridy = 4;
 		c2.gridwidth = 2;
 
@@ -504,6 +504,7 @@ public class DoctorGUI {
 				enterdate.setVisible(true);
 				enterdiagnosis.setVisible(true);
 				entermedicine.setVisible(true);
+				pane2.setVisible(true);
 				
 				
 				refresh2(PatientID);
