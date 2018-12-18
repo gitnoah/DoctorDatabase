@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class DoctorGUI {
 	Object[] columns;
+	Object[] columns2;
 	DefaultTableModel model, model2;
 	Object[] row;
 	Object[] row2;
@@ -205,13 +206,15 @@ public class DoctorGUI {
 		JLabel vname = new JLabel("Enter name of patient.");
 		c2.gridx = 0;
 		c2.gridy = 1;
+		c2.gridwidth = 1;
 		
 		panel2.add(vname, c2);
 		vname.setVisible(false);
 		
 		JTextField vnamet = new JTextField(20);
-		c2.gridx = 1;
+		c2.gridx = 2;
 		c2.gridy = 1;
+		c2.gridwidth = 2;
 		
 		panel2.add(vnamet, c2);
 		vnamet.setVisible(false);
@@ -219,7 +222,7 @@ public class DoctorGUI {
 		JScrollPane pane2 = new JScrollPane(table3);
 		pane2.setVisible(false);
 		c2.gridx = 0;
-		c2.gridy = 2;
+		c2.gridy = 3;
 		c2.gridwidth = 4;
 		pane2.setSize(600, 600);
 
@@ -227,12 +230,16 @@ public class DoctorGUI {
 		frame2.setLayout(null);
 		
 		JButton entervi = new JButton("Enter");
+		c2.gridwidth = 1;
+		c2.gridx = 0;
+		c2.gridy = 2;
+		entervi.setVisible(false);
 		
 		entervi.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PatientID = getPatientID(vname.getText());
+				PatientID = getPatientID(vnamet.getText());
 				refresh2(PatientID);
 				
 				
@@ -240,9 +247,73 @@ public class DoctorGUI {
 			
 		});
 		
+		panel2.add(entervi, c2);
+		
 		
 
 		/////////////////////// display visits end///////////////////
+		
+		///////////////////enter new visit start/////////////////////
+		
+		JLabel date = new JLabel("Enter Date");
+		c2.gridx = 0;
+		c2.gridy = 1;
+		c2.gridwidth = 1;
+		
+		panel2.add(date, c2);
+		date.setVisible(false);
+		
+		JLabel diagnosis = new JLabel("Enter Diagnosis");
+		c2.gridx = 0;
+		c2.gridy = 2;
+		c2.gridwidth = 1;
+		
+		panel2.add(diagnosis, c2);
+		diagnosis.setVisible(false);
+		
+		JLabel medicine = new JLabel("Enter Medicine");
+		c2.gridx = 0;
+		c2.gridy = 3;
+		c2.gridwidth = 1;
+		
+		panel2.add(medicine, c2);
+		date.setVisible(false);
+		
+		JButton entervisit = new JButton("Enter");
+		c2.gridx = 0;
+		c2.gridy = 4;
+		c2.gridwidth = 1;
+		
+		panel2.add(entervisit, c2);
+		entervisit.setVisible(false);
+		
+		JTextField enterdate = new JTextField();
+		c2.gridx = 1;
+		c2.gridy = 1;
+		c2.gridwidth = 2;
+		
+		panel2.add(enterdate, c2);
+		enterdate.setVisible(false);
+		
+		JTextField enterdiagnosis = new JTextField();
+		c2.gridx = 1;
+		c2.gridy = 2;
+		c2.gridwidth = 2;
+		
+		panel2.add(enterdiagnosis, c2);
+		enterdiagnosis.setVisible(false);
+		
+		JTextField entermedicine = new JTextField();
+		c2.gridx = 1;
+		c2.gridy = 3;
+		c2.gridwidth = 2;
+		
+		panel2.add(entermedicine, c2);
+		enterdate.setVisible(false);
+		
+		
+		
+		///////////////enter new visit end//////////////////////
 
 		JButton display = new JButton("Display Patients.");
 		c2.gridx = 0;
@@ -261,6 +332,10 @@ public class DoctorGUI {
 				pnamt.setVisible(false);
 				pphont.setVisible(false);
 				entpat.setVisible(false);
+				pane2.setVisible(false);
+				entervi.setVisible(false);
+				vname.setVisible(false);
+				vnamet.setVisible(false);
 
 				pane1.setVisible(true);
 				Object[] columns = { "Name", "Phone" };
@@ -287,6 +362,12 @@ public class DoctorGUI {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("New Patients");
+				
+				pane2.setVisible(false);
+				entervi.setVisible(false);
+				vname.setVisible(false);
+				vnamet.setVisible(false);
+				
 				pane1.setVisible(true);
 				Object[] columns = { "Name", "Phone" };
 				model = new DefaultTableModel();
@@ -326,10 +407,13 @@ public class DoctorGUI {
 				pane1.setVisible(false);
 				
 				pane2.setVisible(true);
-				Object[] columns = { "Date", "Diagnosis", "Medicine" };
+				entervi.setVisible(true);
+				vname.setVisible(true);
+				vnamet.setVisible(true);
+				Object[] columns2 = { "Date", "Diagnosis", "Medicine" };
 				model2 = new DefaultTableModel();
-				model2.setColumnIdentifiers(columns);
-				table3.setModel(model);
+				model2.setColumnIdentifiers(columns2);
+				table3.setModel(model2);
 				table3.setRowHeight(30);
 
 				
@@ -482,9 +566,9 @@ public class DoctorGUI {
 			while (rs.next()) {
 				row2[0] = rs.getString("Date");
 				row2[1] = rs.getString("Diagnosis");
-				row2[3] = rs.getString("Medicine");
+				row2[2] = rs.getString("Medicine");
 
-				model2.addRow(row);
+				model2.addRow(row2);
 			}
 
 			rs.close();
@@ -495,7 +579,7 @@ public class DoctorGUI {
 		}
 	}
 	
-	private int getPatientID(String vname) {
+	private int getPatientID(String bob) {
 		System.out.println("getPatientID");
 		String sql = "SELECT PatientID FROM PatientTable WHERE Name = ?";
 
@@ -504,7 +588,7 @@ public class DoctorGUI {
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, vname);
+			pstmt.setString(1, bob);
 			ResultSet rs = pstmt.executeQuery();
 
 			Patientid = rs.getInt("PatientID");
