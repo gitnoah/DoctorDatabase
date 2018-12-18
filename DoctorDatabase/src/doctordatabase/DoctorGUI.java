@@ -254,7 +254,7 @@ public class DoctorGUI {
 
 		JLabel date = new JLabel("Enter Date");
 		c2.gridx = 0;
-		c2.gridy = 1;
+		c2.gridy = 2;
 		c2.gridwidth = 1;
 
 		panel2.add(date, c2);
@@ -262,7 +262,7 @@ public class DoctorGUI {
 
 		JLabel diagnosis = new JLabel("Enter Diagnosis");
 		c2.gridx = 0;
-		c2.gridy = 2;
+		c2.gridy = 3;
 		c2.gridwidth = 1;
 
 		panel2.add(diagnosis, c2);
@@ -270,15 +270,15 @@ public class DoctorGUI {
 
 		JLabel medicine = new JLabel("Enter Medicine");
 		c2.gridx = 0;
-		c2.gridy = 3;
+		c2.gridy = 4;
 		c2.gridwidth = 1;
 
 		panel2.add(medicine, c2);
-		date.setVisible(false);
+		medicine.setVisible(false);
 
 		JButton entervisit = new JButton("Enter");
 		c2.gridx = 0;
-		c2.gridy = 4;
+		c2.gridy = 5;
 		c2.gridwidth = 1;
 
 		panel2.add(entervisit, c2);
@@ -286,7 +286,7 @@ public class DoctorGUI {
 
 		JTextField enterdate = new JTextField();
 		c2.gridx = 1;
-		c2.gridy = 1;
+		c2.gridy = 2;
 		c2.gridwidth = 2;
 
 		panel2.add(enterdate, c2);
@@ -294,7 +294,7 @@ public class DoctorGUI {
 
 		JTextField enterdiagnosis = new JTextField();
 		c2.gridx = 1;
-		c2.gridy = 2;
+		c2.gridy = 3;
 		c2.gridwidth = 2;
 
 		panel2.add(enterdiagnosis, c2);
@@ -302,11 +302,43 @@ public class DoctorGUI {
 
 		JTextField entermedicine = new JTextField();
 		c2.gridx = 1;
-		c2.gridy = 3;
+		c2.gridy = 4;
 		c2.gridwidth = 2;
 
 		panel2.add(entermedicine, c2);
-		enterdate.setVisible(false);
+		entermedicine.setVisible(false);
+		
+		entervisit.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				PatientID = getPatientID(vnamet.getText());
+				
+				String sql = "INSERT INTO PatientVisit (Date, PatientID, Diagnosis, Medicine) VALUES (?, ?, ?, ?)";
+				
+				try {
+					Connection conn = connect();
+					PreparedStatement ps = conn.prepareStatement(sql);
+					
+					ps.setString(1, enterdate.getText());
+					ps.setInt(2, PatientID);
+					ps.setString(3, enterdiagnosis.getText());
+					ps.setString(4, entermedicine.getText());
+					
+					ps.executeUpdate();
+					
+					ps.close();
+					conn.close();
+					
+				}catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				
+				refresh2(PatientID);
+			}
+			
+				
+		});
 
 		/////////////// enter new visit end//////////////////////
 
@@ -331,6 +363,14 @@ public class DoctorGUI {
 				entervi.setVisible(false);
 				vname.setVisible(false);
 				vnamet.setVisible(false);
+				date.setVisible(false);
+				diagnosis.setVisible(false);
+				medicine.setVisible(false);
+				entervisit.setVisible(false);
+				enterdate.setVisible(false);
+				enterdiagnosis.setVisible(false);
+				entermedicine.setVisible(false);
+
 
 				pane1.setVisible(true);
 				Object[] columns = { "Name", "Phone" };
@@ -362,6 +402,14 @@ public class DoctorGUI {
 				entervi.setVisible(false);
 				vname.setVisible(false);
 				vnamet.setVisible(false);
+				date.setVisible(false);
+				diagnosis.setVisible(false);
+				medicine.setVisible(false);
+				entervisit.setVisible(false);
+				enterdate.setVisible(false);
+				enterdiagnosis.setVisible(false);
+				entermedicine.setVisible(false);
+
 
 				pane1.setVisible(true);
 				Object[] columns = { "Name", "Phone" };
@@ -400,6 +448,15 @@ public class DoctorGUI {
 				pphont.setVisible(false);
 				entpat.setVisible(false);
 				pane1.setVisible(false);
+				vname.setVisible(false);
+				vnamet.setVisible(false);
+				date.setVisible(false);
+				diagnosis.setVisible(false);
+				medicine.setVisible(false);
+				entervisit.setVisible(false);
+				enterdate.setVisible(false);
+				enterdiagnosis.setVisible(false);
+				entermedicine.setVisible(false);
 
 				pane2.setVisible(true);
 				entervi.setVisible(true);
@@ -426,7 +483,31 @@ public class DoctorGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				System.out.println("Display Patients Button");
+				pname.setVisible(false);
+				pnum.setVisible(false);
+				pnamt.setVisible(false);
+				pphont.setVisible(false);
+				entpat.setVisible(false);
+				pane1.setVisible(false);
+				entervi.setVisible(false);
 
+				
+				vname.setVisible(true);
+				vnamet.setVisible(true);
+				date.setVisible(true);
+				diagnosis.setVisible(true);
+				medicine.setVisible(true);
+				entervisit.setVisible(true);
+				enterdate.setVisible(true);
+				enterdiagnosis.setVisible(true);
+				entermedicine.setVisible(true);
+				
+				
+				refresh2(PatientID);
+				
 			}
 
 		});
